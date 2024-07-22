@@ -3,10 +3,11 @@ use std::pin::Pin;
 use std::sync::Arc;
 
 use futures::Future;
+use tokio::runtime::RngSeed;
 use tokio::runtime::Runtime;
 use tokio::task::JoinHandle;
 use tokio::task::LocalSet;
-use tokio::time::{Duration, Instant, sleep};
+use tokio::time::{sleep, Duration, Instant};
 
 use super::Result;
 
@@ -227,6 +228,7 @@ fn init(enable_io: bool) -> (Runtime, LocalSet) {
     let tokio = tokio_builder
         .enable_time()
         .start_paused(true)
+        .rng_seed(RngSeed::from_bytes(42u64.to_be_bytes().as_slice()))
         .build()
         .unwrap();
 
